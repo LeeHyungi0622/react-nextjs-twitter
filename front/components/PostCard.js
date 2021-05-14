@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Card, Popover, Button} from 'antd';
+import { Card, Popover, Button, List, Comment } from 'antd';
 import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Avatar from 'antd/lib/avatar/avatar';
 import PostImages from '../components/PostImages';
+import CommentForm from '../components/CommentForm';
 
 const PostCard = ({ post }) => {
     const [liked, setLiked] = useState(false);
@@ -47,7 +48,24 @@ const PostCard = ({ post }) => {
             </Card>
             {commentFormOpened && (
                 <div>
-                    댓글 부분
+                    {/* 어떤 게시글에 달린 댓글인지 구분하기 위해 */}
+                    <CommentForm post={post}/>
+                    <List
+                        header={`${post.Comments.length}개의 댓글`}
+                        itemLayout="horizontal"
+                        // datasource로 post.Comments 내의 객체를 순회한다.
+                        dataSource={post.Comments}
+                        // dataSource로부터 넘겨받은 comment item을 반복 순회한다.
+                        renderItem={(item) => (
+                            <li>
+                                <Comment
+                                    author={item.User.nickname}
+                                    avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                                    content={item.content}
+                                />
+                            </li>
+                        )}
+                    />
                 </div>
             )}
             {/* <CommentForm /> */}
@@ -65,7 +83,7 @@ PostCard.propTypes = {
         User: PropTypes.object,
         content: PropTypes.string,
         createdAt: PropTypes.object,
-        Comment: PropTypes.arrayOf(PropTypes.object),
+        Comments: PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.object),
     }).isRequired
 };
