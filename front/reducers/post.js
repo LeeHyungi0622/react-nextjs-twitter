@@ -5,7 +5,7 @@ const initialState = {
             id: 1,
             nickname: 'lee'
         },
-        content: 'first content',
+        content: '굿잡 #첫번째 해시태그 #두번째 해시태그',
         Images: [{
                 src: 'https://images.pexels.com/photos/3998365/pexels-photo-3998365.png'
             },
