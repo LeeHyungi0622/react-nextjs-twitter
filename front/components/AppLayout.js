@@ -6,16 +6,33 @@ import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { createGlobalStyle  } from 'styled-components';
 
 const InputSearch = styled(Input.Search)`
     vertical-align: middle;
 `;
+
+// 좌우 스크롤 화면에 생기는 것 제거
+const Global = createGlobalStyle`
+    .ant-row {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    .ant-col:first-child {
+        padding-left: 0 !important;
+    }
+    .ant-col:last-child {
+        padding-right: 0 !important;
+    }
+`;
+
 
 const AppLayout = ({ children }) => {
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     return (
         <div>
+            <Global />
             <Menu mode="horizontal">
                 <Menu.Item>
                     <Link href="/"><a>노드버드</a></Link>
