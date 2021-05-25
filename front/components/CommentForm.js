@@ -7,7 +7,7 @@ import { ADD_COMMENT_REQUEST } from '../types/post';
 
 const CommentForm = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id);
-  const { addCommentDone } = useSelector((state) => state.post);
+  const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
   const dispatch = useDispatch();
   const onSubmitComment = useCallback(() => {
@@ -28,7 +28,7 @@ const CommentForm = ({ post }) => {
     <Form onFinish={onSubmitComment}>
       <Form.Item style={{ position: 'relative', margin: 0 }}>
         <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4} />
-        <Button type="primary" htmlType="submit">삐약</Button>
+        <Button type="primary" htmlType="submit" loading={addCommentLoading} style={{ position: 'absolute', right: 0, bottom: -40, zIndex: 1 }}>삐약</Button>
       </Form.Item>
     </Form>
   );

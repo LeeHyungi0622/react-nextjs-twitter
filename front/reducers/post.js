@@ -1,3 +1,4 @@
+import shortId from 'shortid';
 import { ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS } from '../types/post';
 
 const initialState = {
@@ -54,11 +55,22 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-  id: 2,
+  id: shortId.generate(),
   content: data,
   User: {
     id: 1,
-    nickname: 'cho',
+    nickname: 'lee',
+  },
+  Images: [],
+  Comments: [],
+});
+
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: 'lee',
   },
   Images: [],
   Comments: [],
@@ -94,12 +106,22 @@ const reducer = (state = initialState, action) => {
         addCommentDone: false,
         addCommentError: null,
       };
-    case ADD_COMMENT_SUCCESS:
+    case ADD_COMMENT_SUCCESS: {
+      // action.data.content, postId, userId
+      // 우선 넘겨받은 게시물의 id를 통해서 어떤 게시물인지 index를 통해 찾는다.
+      // 바뀌는 것만 새로운 객체로 만들고 나머지 객체는 참조를 유지해줘야 한다. (불변성)
+      const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
+      const post = { ...state.mainPosts[postIndex]};
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };
+    }
     case ADD_COMMENT_FAILURE:
       return {
         ...state,
