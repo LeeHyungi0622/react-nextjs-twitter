@@ -1,5 +1,5 @@
 import shortId from 'shortid';
-import { ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS } from '../types/post';
+import { ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, REMOVE_POST_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS } from '../types/post';
 
 const initialState = {
   mainPosts: [{
@@ -44,6 +44,9 @@ const initialState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+  removePostLoading: false,
+  removePostDone: false,
+  removePostError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -51,6 +54,11 @@ const initialState = {
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
+  data,
+});
+
+export const removePost = (data) => ({
+  type: REMOVE_POST_REQUEST,
   data,
 });
 
@@ -103,6 +111,27 @@ const reducer = (state = initialState, action) => {
         ...state,
         addPostLoading: false,
         addPostError: action.error,
+      };
+    case REMOVE_POST_REQUEST:
+      return {
+        ...state,
+        removePostLoading: true,
+        removePostDone: false,
+        removePostError: null,
+      };
+    case REMOVE_POST_SUCCESS:
+      return {
+        ...state,
+        mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+        // mainPosts: [dummyPost, ...state.mainPosts],
+        removePostLoading: false,
+        removePostDone: true,
+      };
+    case REMOVE_POST_FAILURE:
+      return {
+        ...state,
+        removePostLoading: false,
+        removePostError: action.error,
       };
     case ADD_COMMENT_REQUEST:
       return {

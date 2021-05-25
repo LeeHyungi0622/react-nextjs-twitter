@@ -1,4 +1,4 @@
-import { ADD_POST_TO_ME, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from '../types/user';
+import { ADD_POST_TO_ME, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, REMOVE_POST_OF_ME, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from '../types/user';
 
 const initialState = {
   logInLoading: false, // 로그인 시도중... (로딩창 띄우기 위한 목적)
@@ -109,6 +109,14 @@ const reducer = (state = initialState, action) => {
         me: {
           ...state.me,
           Posts: [{ id: action.data }, ...state.me.Posts],
+        },
+      };
+    case REMOVE_POST_OF_ME:
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          Posts: state.me.Posts.filter((v) => v.id !== action.data),
         },
       };
     default:
