@@ -10,6 +10,9 @@ const initialState = {
   signUpLoading: false, // 회원가입 시도중... (로딩창 띄우기 위한 목적)
   signUpDone: false,
   signUpError: null,
+  changeNicknameLoading: false, // 닉네임 변경 시도중...
+  changeNicknameDone: false,
+  changeNicknameError: null,
   me: null,
   signUpData: {},
   loginData: {},
@@ -29,9 +32,9 @@ const dummyUser = (data) => ({
   ...data,
   nickname: 'lee',
   id: 1,
-  Post: [],
-  Followings: [],
-  Followers: [],
+  Posts: [{ id: 1 }],
+  Followings: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }],
+  Followers: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }],
 });
 
 // 하나의 request당 REQUEST, SUCCESS, FAILURE를 처리
@@ -52,7 +55,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         logInLoading: false,
         logInDone: true,
-        me: dummyUser,
+        me: dummyUser(action.data),
       };
       // failure 시에는 loading: false, error 넣어주기
     case LOG_IN_FAILURE:
