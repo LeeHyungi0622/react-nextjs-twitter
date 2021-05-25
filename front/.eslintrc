@@ -1,4 +1,8 @@
 {
+    // 기본 eslint가 코드를 해석하지 않고,
+    // babel-eslint가 코드를 해석하기 때문에 
+    // 최신 문법도 에러를 발생시키지 않는다.
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 2020,
         "sourceType": "module",
@@ -11,12 +15,23 @@
         "node": true,
         "es6": true
     },
+    // recommend는 코드에 대한 규제가 약하기 때문에 airbnb
     "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+        "airbnb"
     ],
     "plugins": [
         "import",
         "react-hooks"
-    ]
+    ],
+    "rules": {
+        "jsx-a11y/label-has-associated-control": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "no-console": "off",
+        "no-underscore-dangle": "off",
+        "react/forbid-prop-types": "off",
+        "react/jsx-filename-extension": "off",
+        "react/jsx-one-expression-per-line": "off",
+        "object-curly-newline": "off",
+        "linebreak-style": "off"
+    }
 }
