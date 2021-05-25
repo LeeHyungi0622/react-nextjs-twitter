@@ -1,4 +1,4 @@
-import { all, fork, put, take, delay } from 'redux-saga/effects';
+import { all, fork, put, take, delay, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 import { ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS } from '../types/post';
 
@@ -6,12 +6,14 @@ function addPostAPI(data) {
   return axios.post('/api/posts', data);
 }
 
-function* addPost() {
+function* addPost(action) {
   try {
+    console.log('saga add post');
     // const result = yield call(addPostAPI);
     yield delay(1000);
     yield put({
       type: ADD_POST_SUCCESS,
+      data: action.data,
     });
   } catch (err) {
     yield put({
@@ -42,11 +44,11 @@ function* addComment(action) {
 }
 
 function* watchAddPost() {
-  yield take(ADD_POST_REQUEST, addPost);
+  yield takeLatest(ADD_POST_REQUEST, addPost);
 }
 
 function* watchAddComment() {
-  yield take(ADD_COMMENT_REQUEST, addComment);
+  yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
 
 export default function* postSaga() {
