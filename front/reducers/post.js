@@ -10,22 +10,27 @@ const initialState = {
     },
     content: '굿잡 #첫번째 해시태그 #두번째 해시태그',
     Images: [{
+      id: shortId.generate(),
       src: 'https://images.pexels.com/photos/3998365/pexels-photo-3998365.png',
     },
     {
+      id: shortId.generate(),
       src: 'https://images.pexels.com/photos/12064/pexels-photo-12064.jpeg',
     },
     {
+      id: shortId.generate(),
       src: 'https://images.pexels.com/photos/159775/library-la-trobe-study-students-159775.jpeg',
     },
     ],
     Comments: [{
+      id: shortId.generate(),
       User: {
         nickname: 'lee',
       },
       content: 'comment1',
     },
     {
+      id: shortId.generate(),
       User: {
         nickname: 'kim',
       },
@@ -55,8 +60,8 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-  id: shortId.generate(),
-  content: data,
+  id: data.id,
+  content: data.content,
   User: {
     id: 1,
     nickname: 'lee',
@@ -66,8 +71,8 @@ const dummyPost = (data) => ({
 });
 
 const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data,
+  id: data.id,
+  content: data.content,
   User: {
     id: 1,
     nickname: 'lee',
