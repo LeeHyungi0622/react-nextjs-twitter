@@ -16,7 +16,7 @@ const PostCard = ({ post }) => {
   const { me } = useSelector((props) => props.user);
   const id = me?.id;
   const dispatch = useDispatch();
-  
+
   const onToggleLike = useCallback(() => {
     setLiked((prev) => !prev);
   }, []);
