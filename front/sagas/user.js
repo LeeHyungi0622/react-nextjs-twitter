@@ -1,6 +1,6 @@
 import { all, fork, call, put, delay, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
-import { LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from '../types/user';
+import { FOLLOW_FAILURE, FOLLOW_REQUEST, FOLLOW_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, UNFOLLOW_FAILURE, UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS } from '../types/user';
 
 // generator(*)
 // 패턴대로 코딩을 하기 때문에 익숙해지면 된다.
@@ -74,6 +74,50 @@ function* signup(action) {
     });
   }
 }
+// 비동기 처리 함수는 제너레이터 함수가 아니다.
+function followAPI() {
+  return axios.post('/api/follow');
+}
+
+function* follow(action) {
+  try {
+    // const result = yield call(followAPI);
+    yield delay(1000);
+    // 이 시점에서 에러를 던지면 아래 catch문으로 넘어간다.
+    // throw new Error('')
+    yield put({
+      type: FOLLOW_SUCCESS,
+      data: action.data,
+    });
+  } catch (err) {
+    yield put({
+      type: FOLLOW_FAILURE,
+      data: err.response.data,
+    });
+  }
+}
+// 비동기 처리 함수는 제너레이터 함수가 아니다.
+function unfollowAPI() {
+  return axios.post('/api/unfollow');
+}
+
+function* unfollow(action) {
+  try {
+    // const result = yield call(unfollowAPI);
+    yield delay(1000);
+    // 이 시점에서 에러를 던지면 아래 catch문으로 넘어간다.
+    // throw new Error('')
+    yield put({
+      type: UNFOLLOW_SUCCESS,
+      data: action.data,
+    });
+  } catch (err) {
+    yield put({
+      type: UNFOLLOW_FAILURE,
+      data: err.response.data,
+    });
+  }
+}
 
 function* watchLogIn() {
   yield takeLatest(LOG_IN_REQUEST, login);
@@ -86,11 +130,19 @@ function* watchLogOut() {
 function* watchSignUp() {
   yield takeLatest(SIGN_UP_REQUEST, signup);
 }
+function* watchFollow() {
+  yield takeLatest(FOLLOW_REQUEST, follow);
+}
+function* watchUnfollow() {
+  yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+}
 
 export default function* userSaga() {
   yield all([
     fork(watchLogIn),
     fork(watchLogOut),
     fork(watchSignUp),
+    fork(watchFollow),
+    fork(watchUnfollow),
   ]);
 }
