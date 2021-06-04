@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
-
+import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
@@ -16,17 +16,17 @@ TextInput.propTypes = {
 };
 
 const Signup = () => {
+  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
   const [passwordCheck, setPasswordCheck] = useState('');
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
 
   const [email, onChangeEmail] = useInput('');
-  const [nick, onChangeNick] = useInput('');
+  const [nickname, onChangeNickname] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
 
   const onSubmit = useCallback(() => {
     if (password !== passwordCheck) {
@@ -38,7 +38,7 @@ const Signup = () => {
     console.log(email, password);
     dispatch({
       type: SIGN_UP_REQUEST,
-      data: { email, passwordCheck, term },
+      data: { email, passwordCheck, term, nickname },
     });
   }, [password, passwordCheck, term]);
 
@@ -52,6 +52,19 @@ const Signup = () => {
     setTerm(e.target.checked);
   }, []);
 
+  useEffect(() => {
+    if (signUpDone) {
+      // 회원가입 완료후 메인페이지로 이동
+      Router.push('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
+
   return (
     <AppLayout>
       <Form onFinish={onSubmit} style={{ padding: 10 }}>
@@ -64,7 +77,7 @@ const Signup = () => {
         <div>
           <label htmlFor="user-nick">닉네임</label>
           <br />
-          <Input name="user-nick" value={nick} required onChange={onChangeNick} />
+          <Input name="user-nick" value={nickname} required onChange={onChangeNickname} />
         </div>
         <div>
           <label htmlFor="user-password">비밀번호</label>

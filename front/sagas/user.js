@@ -27,7 +27,7 @@ function* login(action) {
     yield put({
       type: LOG_IN_FAILURE,
       // 실패 결과는 err.response.data에 담겨있다.
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -47,20 +47,23 @@ function* logout(action) {
   } catch (err) {
     yield put({
       type: LOG_OUT_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
 
 // 비동기 처리 함수는 제너레이터 함수가 아니다.
-function signUpAPI() {
-  return axios.post('/api/signUp');
+function signUpAPI(data) {
+  // email, password, nickname object를 같이 넘겨준다.
+  return axios.post('http://localhost:3065/user', data);
 }
 
 function* signup(action) {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    // action.data를 함께 넘겨준다.
+    // yield delay(1000);
+    const result = yield call(signUpAPI, action.data);
+    console.log(result);
     // 이 시점에서 에러를 던지면 아래 catch문으로 넘어간다.
     // throw new Error('')
     yield put({
@@ -68,9 +71,11 @@ function* signup(action) {
       data: action.data,
     });
   } catch (err) {
+    // error가 발생하는 경우, server로부터 받은 에러 메시지를 error를 통해 전달한다.
+    // reducer에서 error 상태값에 초기화를 시켜준다.
     yield put({
       type: SIGN_UP_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -92,7 +97,7 @@ function* follow(action) {
   } catch (err) {
     yield put({
       type: FOLLOW_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -114,7 +119,7 @@ function* unfollow(action) {
   } catch (err) {
     yield put({
       type: UNFOLLOW_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
