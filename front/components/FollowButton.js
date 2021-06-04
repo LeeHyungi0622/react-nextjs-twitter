@@ -7,7 +7,7 @@ import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../types/user';
 const FollowButton = ({ post }) => {
   const { me, followLoading, unfollowLoading } = useSelector((state) => state.user);
   // 팔로잉 여부 체크 (내가 팔로우하고 있는 사람의 게시글인지 확인)
-  const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
+  const isFollowing = me?.Followings?.find((v) => v.id === post.User.id);
   const dispatch = useDispatch();
   const onFollow = useCallback(() => {
     // 이미 팔로우하고 있는 상태라면 언팔로우

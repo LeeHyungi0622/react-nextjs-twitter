@@ -57,7 +57,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       // success 시에는 done: true
       draft.logInLoading = false;
       draft.logInDone = true;
-      draft.me = dummyUser(action.data);
+      draft.me = action.data;
       break;
       // failure 시에는 loading: false, error 넣어주기
     case LOG_IN_FAILURE:
