@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 // const db = require('../models');
-const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const { User, Post } = require('../models');
 
 // 일반 로그인인 경우 작성한 passport-local login 전략을 사용한다.
 // 앞서 전략에서 작성한 done([서버 에러], [성공], [클라이언트 에러])가
@@ -28,11 +28,38 @@ router.post('/login', (req, res, next) => {
                 console.error(loginErr);
                 return next(loginErr);
             }
+            // post, followings, followers 정보를 포함한
+            // 사용자 정보
+            const fullUserWithoutPassword = await User.findOne({
+                where: { id: user.id },
+                // 비밀번호 제외시키기
+                // attributes: ['id', 'nickname', 'email']
+                attributes: {
+                    exclude: ['password']
+                },
+                // associate에서 포함했던 내용
+                // 부족했던 Post, User의 Followings 정보
+                // 부족했던 User의 Followers 정보
+                // sequelize가 다른 테이블의 정보를 합쳐서 보내준다.
+                include: [{
+                    model: Post,
+                }, {
+                    model: User,
+                    // model에서 as로 정의한 경우에는 include에서도 as로 정의해야 된다.
+                    as: 'Followings',
+                }, {
+                    model: User,
+                    // model에서 as로 정의한 경우에는 include에서도 as로 정의해야 된다.                    
+                    as: 'Followers',
+                }]
+            });
+
             // 이 지점에서 내부적으로 Cookie 정보를 header를 통해 전달한다.
             // res.setHeader('Cookie', 'cxlhy');
 
             // 최종 로그인 성공시, 사용자 정보를 프론트로 넘겨준다.
-            return res.status(200).json(user);
+            // return res.status(200).json(user);
+            return res.status(200).json(fullUserWithoutPassword);
         });
     })(req, res, next);
 });
