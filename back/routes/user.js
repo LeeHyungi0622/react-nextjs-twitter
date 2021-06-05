@@ -19,6 +19,7 @@ router.post('/login', (req, res, next) => {
         if (info) {
             // client error
             // 401: 허가되지 않음.
+            // 로그인 실패시 전달.
             return res.status(401).send(info.reason);
         }
         // passport login을 사용해서 로그인을 실행한다.

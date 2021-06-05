@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
@@ -15,7 +15,7 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +33,13 @@ const LoginForm = () => {
     dispatch(loginRequestAction({ email, password }));
   }, [email, password]);
 
+  useEffect(() => {
+    // 로그인 실패시 알람 팝업
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
+  
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>

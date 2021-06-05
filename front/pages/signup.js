@@ -16,7 +16,7 @@ TextInput.propTypes = {
 };
 
 const Signup = () => {
-  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
   const [passwordCheck, setPasswordCheck] = useState('');
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -64,6 +64,14 @@ const Signup = () => {
       alert(signUpError);
     }
   }, [signUpError]);
+
+  // 로그인이 성공하면 회원가입 페이지가 보이지 않게 
+  // 기록자체를 삭제(replace) 
+  useEffect(() => {
+    if (!(me && me.id)) {
+      Router.replace('/');
+    }
+  }, [me && me.id]);
 
   return (
     <AppLayout>
