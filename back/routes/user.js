@@ -4,13 +4,14 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 // 일반 로그인인 경우 작성한 passport-local login 전략을 사용한다.
 // 앞서 전략에서 작성한 done([서버 에러], [성공], [클라이언트 에러])가
 // 아래의 callback 함수의 err, user, info로 넘어간다.
 
 // 아래와 같이 middleware를 확장해서 작성할 수 있다.(next를 통해 에러를 전달하기 위해서)
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
             console.error(err);
@@ -65,7 +66,7 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
     // 로그인 된 상태에서는 req.user를 통해 로그인된 사용자 정보를 확인할 수 있다.
     // 게시글이나 댓글을 쓸때 사용된다.
     console.log(req.user);
@@ -75,7 +76,7 @@ router.post('/logout', (req, res, next) => {
     res.send('ok');
 });
 
-router.post('/', async(req, res, next) => {
+router.post('/', isNotLoggedIn, async(req, res, next) => {
     try {
         // 이메일 중복체크
         // 공식문서를 보고 비동기 함수인지 확인 후 사용

@@ -61,6 +61,12 @@ app.get('/posts', (req, res) => {
 app.use('/post', postRouter);
 app.use('/user', userRouter);
 
+// 에러 처리 middleware (next(error))
+// 내부적으로 이미 존재하지만 직접 재정의할 수 있다.
+// app.use((err, req, res, next) => {
+
+// });
+
 app.listen(3065, () => {
     console.log('Server is running');
 });
