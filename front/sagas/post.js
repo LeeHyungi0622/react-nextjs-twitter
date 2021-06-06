@@ -69,16 +69,16 @@ function* removePost(action) {
 }
 
 function addCommentAPI(data) {
-  return axios.post(`/api/post/${data.postId}/comment`, data);
+  return axios.post(`/post/${data.postId}/comment`, data);// POST /post/1/comment
 }
 
 function* addComment(action) {
   try {
-    // const result = yield call(addCommentAPI);
-    yield delay(1000);
+    const result = yield call(addCommentAPI, action.data);
+    // 성공적으로 comment가 달린 뒤에 서버로부터 받은 응답으로 data 대체
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
