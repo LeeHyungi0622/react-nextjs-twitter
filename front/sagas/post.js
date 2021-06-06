@@ -29,7 +29,7 @@ function* addPost(action) {
     // 아래와 같이 연속적으로 action을 dispatch한다. 
     yield put({
       type: ADD_POST_TO_ME,
-      data: id,
+      data: result.data.id,
     });
   } catch (err) {
     yield put({
