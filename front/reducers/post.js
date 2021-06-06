@@ -63,17 +63,6 @@ export const addComment = (data) => ({
   data,
 });
 
-const dummyPost = (data) => ({
-  id: data.id,
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: 'lee',
-  },
-  Images: [],
-  Comments: [],
-});
-
 const dummyComment = (data) => ({
   id: shortId.generate(),
   content: data,
@@ -112,7 +101,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_SUCCESS:
       draft.addPostLoading = false;
       draft.addPostDone = true;
-      draft.mainPosts.unshift(dummyPost(action.data));
+      // dummy data를 사용하지 않고 실제 데이터를 unshift해준다.
+      draft.mainPosts.unshift(action.data);
       break;
     case ADD_POST_FAILURE:
       draft.addPostLoading = false;

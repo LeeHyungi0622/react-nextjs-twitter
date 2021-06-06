@@ -1,26 +1,29 @@
 import shortId from 'shortid';
-import { all, fork, put, take, delay, takeLatest } from 'redux-saga/effects';
+import { all, fork, put, call, delay, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 import { ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, LOAD_POST_FAILURE, LOAD_POST_REQUEST, LOAD_POST_SUCCESS, REMOVE_POST_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS } from '../types/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../types/user';
 import { generateDummyPost } from '../reducers/post';
 
 function addPostAPI(data) {
-  return axios.post('/api/posts', data);
+  // 아래와 같이 data만 넘겨주게 되면 백엔드에서 post content 정보를 
+  // 받았을때, 참조할 이름이 없기 때문에 아래와 같이 json 형태로 이름을
+  // 부여해서 넘겨줘야 한다.
+  // return axios.post('/post', data);
+  // req.body.content
+  return axios.post('/post', { content: data });
 }
 
 function* addPost(action) {
   try {
     console.log('saga add post');
-    // const result = yield call(addPostAPI);
-    yield delay(1000);
-    const id = shortId.generate();
+    const result = yield call(addPostAPI);
+    // back-end로부터 넘겨받은 데이터는 result.data 내부에 있다.
     yield put({
       type: ADD_POST_SUCCESS,
-      data: {
-        id,
-        content: action.data,
-      },
+      // 성공적으로 게시물을 등록한 뒤에 넘겨받은 Post 객체를 
+      // result.data 로부터 받아서 reducer로 넘긴다.
+      data: result.data,
     });
     // saga는 동시에 여러 액션을 dispatch할 수 있기 때문에 
     // 아래와 같이 연속적으로 action을 dispatch한다. 
